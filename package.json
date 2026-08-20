@@ -1,0 +1,15 @@
+{
+  "name": "sellertools-100",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "100 browser-based tools for online sellers and small commerce teams.",
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "build": "node scripts/build.mjs",
+    "verify": "npm run check && npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
