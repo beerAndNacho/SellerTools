@@ -6,11 +6,13 @@ const root = resolve(process.cwd());
 const dist = resolve(root, 'dist');
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(resolve(dist, 'assets', 'catalog'), { recursive: true });
+mkdirSync(resolve(dist, 'assets', 'operations'), { recursive: true });
 
 for (const file of ['catalog.js', 'operations.js', 'portal.js', 'engine.js', 'styles.css']) {
   cpSync(resolve(root, 'src', file), resolve(dist, 'assets', file));
 }
 cpSync(resolve(root, 'src', 'catalog'), resolve(dist, 'assets', 'catalog'), { recursive: true });
+cpSync(resolve(root, 'src', 'operations'), resolve(dist, 'assets', 'operations'), { recursive: true });
 
 const portal = `<!doctype html><html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -47,32 +49,9 @@ for (const tool of TOOLS) {
   writeFileSync(resolve(directory, 'index.html'), html);
 }
 
-const urls = [
-  'https://beerandnacho.github.io/SellerTools/',
-  ...TOOLS.map((tool) => `https://beerandnacho.github.io/SellerTools/tools/${tool.slug}/`)
-];
-writeFileSync(
-  resolve(dist, 'sitemap.xml'),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
-    .map((url) => `  <url><loc>${url}</loc><lastmod>2026-08-21</lastmod></url>`)
-    .join('\n')}\n</urlset>\n`
-);
-writeFileSync(
-  resolve(dist, 'robots.txt'),
-  'User-agent: *\nAllow: /\nSitemap: https://beerandnacho.github.io/SellerTools/sitemap.xml\n'
-);
+const urls = ['https://beerandnacho.github.io/SellerTools/', ...TOOLS.map((tool) => `https://beerandnacho.github.io/SellerTools/tools/${tool.slug}/`)];
+writeFileSync(resolve(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `  <url><loc>${url}</loc><lastmod>2026-08-21</lastmod></url>`).join('\n')}\n</urlset>\n`);
+writeFileSync(resolve(dist, 'robots.txt'), 'User-agent: *\nAllow: /\nSitemap: https://beerandnacho.github.io/SellerTools/sitemap.xml\n');
 writeFileSync(resolve(dist, '.nojekyll'), '');
-writeFileSync(
-  resolve(dist, 'manifest.json'),
-  JSON.stringify(
-    {
-      name: 'SellerTools 100',
-      count: TOOLS.length,
-      categories: [...new Set(TOOLS.map((tool) => tool.category))],
-      builtAt: new Date().toISOString()
-    },
-    null,
-    2
-  )
-);
+writeFileSync(resolve(dist, 'manifest.json'), JSON.stringify({ name:'SellerTools 100', count:TOOLS.length, categories:[...new Set(TOOLS.map((tool) => tool.category))], builtAt:new Date().toISOString() }, null, 2));
 console.log(`Built SellerTools portal and ${TOOLS.length} independent tool routes.`);

@@ -1,0 +1,43 @@
+name: SellerTools CI
+
+on:
+  push:
+    branches: [main, seller-tools-100]
+    paths: ['src/**','scripts/**','docs/**','package.json','.github/workflows/seller-tools-ci.yml']
+  pull_request:
+    paths: ['src/**','scripts/**','docs/**','package.json','.github/workflows/seller-tools-ci.yml']
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate catalog and sample execution
+        run: npm run check
+      - name: Build portal and independent routes
+        run: npm run build
+      - name: Verify required output
+        run: |
+          test -s dist/index.html
+          test -s dist/assets/catalog.js
+          test -s dist/assets/catalog/tools01.js
+          test -s dist/assets/catalog/tools10.js
+          test -s dist/assets/operations.js
+          test -s dist/assets/operations/core.js
+          test -s dist/assets/operations/inventory.js
+          test -s dist/assets/operations/analytics.js
+          test -s dist/assets/portal.js
+          test -s dist/assets/engine.js
+          test -s dist/assets/styles.css
+          test -s dist/sitemap.xml
+          test "$(find dist/tools -mindepth 2 -maxdepth 2 -name index.html | wc -l | tr -d ' ')" -eq 100
+          test -s dist/tools/net-profit-calculator/index.html
+          test -s dist/tools/detail-page-missing-check/index.html
+          test -s dist/tools/product-image-resizer/index.html
+          test -s dist/tools/safety-stock-calculator/index.html
+          test -s dist/tools/weekly-seller-report/index.html
+          test -s dist/tools/seller-business-health/index.html
