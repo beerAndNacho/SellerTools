@@ -5,7 +5,7 @@ export function runAnalytics(tool, values) {
     case 'dailyDashboard': {
       const netRevenue=n(values,'revenue')-n(values,'refunds');
       const profit=netRevenue-n(values,'cogs')-n(values,'fees')-n(values,'shippingPackaging')-n(values,'adSpend');
-      return result({title:'일일 매출 요약',metrics:[['순매출',money(netRevenue)],['예상 순이익',money(profit)],['객단가',money(safeDivide(netRevenue,n(values,'orders')))],['방문→주문 전환율',percent(safeDivide(n(values,'orders'),n(values,'visitors'))*100)],['광고 ROAS',percent(safeDivide(netRevenue,n(values,'adSpend'))*100)],['취소·반품 매출 비율',percent(safeDivide(n(values,'refunds'),n(values,'revenue'))*100)]});
+      return result({title:'일일 매출 요약',metrics:[['순매출',money(netRevenue)],['예상 순이익',money(profit)],['객단가',money(safeDivide(netRevenue,n(values,'orders')))],['방문→주문 전환율',percent(safeDivide(n(values,'orders'),n(values,'visitors'))*100)],['광고 ROAS',percent(safeDivide(netRevenue,n(values,'adSpend'))*100)],['취소·반품 매출 비율',percent(safeDivide(n(values,'refunds'),n(values,'revenue'))*100)]]});
     }
     case 'monthlyCompare': {
       const change=(current,previous)=>safeDivide(current-previous,previous)*100;
